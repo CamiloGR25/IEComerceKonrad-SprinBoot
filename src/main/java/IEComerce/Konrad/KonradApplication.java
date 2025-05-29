@@ -10,6 +10,7 @@ import IEComerce.Konrad.validation.services.notificaciones.CorreoNotificacionSer
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,42 @@ import java.util.Scanner;
 
 @SpringBootApplication
 public class KonradApplication{
+	public static void main(String[] args) {
+		SpringApplication.run(KonradApplication.class, args);
+	}
 
+	/**
+	 * Inicializa datos y beans necesarios al arrancar.
+	 */
+	@Bean
+	public CommandLineRunner init(SolicitudRepository solicitudRepository) {
+		return args -> {
+			solicitudRepository.cargarDatosIniciales();
+			System.out.println("Sistema iniciado correctamente con datos en memoria.");
+		};
+	}
+
+	/**
+	 * Bean del repositorio en memoria.
+	 */
+	@Bean
+	public SolicitudRepository solicitudRepository() {
+		return new SolicitudRepository();
+	}
+
+	/**
+	 * Bean de la fachada de validación.
+	 */
+	@Bean
+	public ValidacionFacade validacionFacade(SolicitudRepository repo) {
+		return new ValidacionFacade(
+				new ServicioExternoFactory(),
+				repo,
+				new CorreoNotificacionService()
+		);
+	}
+
+	/*
 	public static void main(String[] args) {
 		// Crear repositorio local en memoria
 		SolicitudRepository solicitudRepository = new SolicitudRepository();
@@ -71,9 +107,9 @@ public class KonradApplication{
 					Long id = scanner.nextLong();
 					try {
 						controller.ejecutarValidacion(id);
-						System.out.println("✅ Validación completada con éxito.");
+						System.out.println("Validación completada con éxito.");
 					} catch (Exception e) {
-						System.out.println("❌ Error durante la validación: " + e.getMessage());
+						System.out.println("Error durante la validación: " + e.getMessage());
 					}
 				}
 
@@ -85,6 +121,6 @@ public class KonradApplication{
 				default -> System.out.println("Opción inválida.");
 			}
 		}
-	}
+	}*/
 
 }
