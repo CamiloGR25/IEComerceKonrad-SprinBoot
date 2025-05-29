@@ -43,8 +43,8 @@ public class SolicitudRepository {
      * Cargar datos iniciales para prueba.
      */
     public void cargarDatosIniciales() {
-        save(new SolicitudVendedor(null, "1010101010", "Torres", "Andrés", "andres@example.com", EstadoSolicitud.PENDIENTE, null));
-        save(new SolicitudVendedor(null, "2020202020", "López", "Camila", "camila@example.com", EstadoSolicitud.PENDIENTE, null));
-        save(new SolicitudVendedor(null, "3030303030", "Martínez", "Julián", "julian@example.com", EstadoSolicitud.PENDIENTE, null));
+        save(new SolicitudVendedor((long) 1, "1010101010", "Torres", "Andrés", "andres@example.com", EstadoSolicitud.PENDIENTE, null));
+        save(new SolicitudVendedor((long) 2, "2020202020", "López", "Camila", "camila@example.com", EstadoSolicitud.PENDIENTE, null));
+        save(new SolicitudVendedor((long) 3, "3030303030", "Martínez", "Julián", "julian@example.com", EstadoSolicitud.PENDIENTE, null));
     }
 }
