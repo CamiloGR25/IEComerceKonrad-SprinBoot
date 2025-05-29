@@ -2,35 +2,25 @@ package IEComerce.Konrad.validation.factory;
 
 import IEComerce.Konrad.validation.models.enums.TipoServicio;
 import IEComerce.Konrad.validation.ports.IServicioExterno;
-import IEComerce.Konrad.validation.services.adapters.CIFINAdapter;
+import IEComerce.Konrad.validation.services.adapters.CifinAdapter;
 import IEComerce.Konrad.validation.services.adapters.DatacreditoAdapter;
 import IEComerce.Konrad.validation.services.adapters.PoliciaAdapter;
+import org.springframework.stereotype.Component;
 
+@Component // Spring lo maneja como Singleton por defecto
 public class ServicioExternoFactory {
 
-    private static volatile ServicioExternoFactory instance;
-
-    private ServicioExternoFactory() {
-        // Constructor privado (Singleton)
-    }
-
-    public static ServicioExternoFactory getInstance() {
-        if (instance == null) {
-            synchronized (ServicioExternoFactory.class) {
-                if (instance == null) {
-                    instance = new ServicioExternoFactory();
-                }
-            }
-        }
-        return instance;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> IServicioExterno<T> crearServicio(TipoServicio tipoServicio) {
-        return switch (tipoServicio) {
-            case DATACREDITO -> (IServicioExterno<T>) new DatacreditoAdapter();
-            case CIFIN       -> (IServicioExterno<T>) new CIFINAdapter();
-            case POLICIA     -> (IServicioExterno<T>) new PoliciaAdapter();
+    /**
+     * Metodo factory para obtener una implementación concreta del servicio externo.
+     *
+     * @param tipo de servicio a consultar
+     * @return instancia del adaptador correspondiente
+     */
+    public IServicioExterno<?> crearServicio(TipoServicio tipo) {
+        return switch (tipo) {
+            case DATACREDITO -> new DatacreditoAdapter();
+            case CIFIN -> new CifinAdapter();
+            case POLICIA -> new PoliciaAdapter();
         };
     }
 }
