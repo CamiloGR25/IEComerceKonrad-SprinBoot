@@ -44,4 +44,20 @@ public class SolicitudRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/identificacion/{numero}")
+    public ResponseEntity<SolicitudVendedor> buscarPorIdentificacion(@PathVariable String numero) {
+        return repository.findAll().stream()
+                .filter(s -> s.getNumeroIdentificacion().equals(numero))
+                .findFirst()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/estado/{estado}")
+    public List<SolicitudVendedor> listarPorEstado(@PathVariable EstadoSolicitud estado) {
+        return repository.findByEstado(estado);
+    }
+
+
 }
