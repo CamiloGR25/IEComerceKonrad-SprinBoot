@@ -2,26 +2,49 @@ package IEComerce.Konrad.validation.repository;
 
 import IEComerce.Konrad.validation.models.SolicitudVendedor;
 import IEComerce.Konrad.validation.models.enums.EstadoSolicitud;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-@Repository
-public interface SolicitudRepository extends JpaRepository<SolicitudVendedor, Long> {
+public class SolicitudRepository {
 
-    /**
-     * Consulta todas las solicitudes que están en un estado específico (por ejemplo: PENDIENTE).
-     */
-    List<SolicitudVendedor> findByEstado(EstadoSolicitud estado);
+    private final Map<Long, SolicitudVendedor> baseDatos = new ConcurrentHashMap<>();
+    private long secuenciaId = 1;
 
     /**
-     * Búsqueda por número de identificación y estado.
+     * Guardar o actualizar una solicitud.
      */
-    List<SolicitudVendedor> findByNumeroIdentificacionAndEstado(String numeroIdentificacion, EstadoSolicitud estado);
+    public SolicitudVendedor save(SolicitudVendedor solicitud) {
+        if (solicitud.getId() == null) {
+            solicitud.setId(secuenciaId++);
+        }
+        baseDatos.put(solicitud.getId(), solicitud);
+        return solicitud;
+    }
 
     /**
-     * Filtro por rango de fechas (requiere un campo de fecha en SolicitudVendedor si se necesita)
+     * Buscar por ID.
      */
-    // List<SolicitudVendedor> findByFechaSolicitudBetween(LocalDate inicio, LocalDate fin);
+    public Optional<SolicitudVendedor> findById(Long id) {
+        return Optional.ofNullable(baseDatos.get(id));
+    }
+
+    /**
+     * Buscar por estado.
+     */
+    public List<SolicitudVendedor> findByEstado(EstadoSolicitud estado) {
+        return baseDatos.values().stream()
+                .filter(s -> s.getEstado() == estado)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Cargar datos iniciales para prueba.
+     */
+    public void cargarDatosIniciales() {
+        save(new SolicitudVendedor(null, "1010101010", "Torres", "Andrés", "andres@example.com", EstadoSolicitud.PENDIENTE, null));
+        save(new SolicitudVendedor(null, "2020202020", "López", "Camila", "camila@example.com", EstadoSolicitud.PENDIENTE, null));
+        save(new SolicitudVendedor(null, "3030303030", "Martínez", "Julián", "julian@example.com", EstadoSolicitud.PENDIENTE, null));
+    }
 }

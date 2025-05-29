@@ -1,7 +1,6 @@
 package IEComerce.Konrad.validation.controller;
 
 import IEComerce.Konrad.validation.facade.ValidacionFacade;
-import IEComerce.Konrad.validation.models.Solicitud;
 import IEComerce.Konrad.validation.models.SolicitudVendedor;
 import IEComerce.Konrad.validation.models.enums.EstadoSolicitud;
 import IEComerce.Konrad.validation.repository.SolicitudRepository;

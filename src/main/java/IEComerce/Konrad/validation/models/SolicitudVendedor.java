@@ -3,12 +3,8 @@ package IEComerce.Konrad.validation.models;
 import IEComerce.Konrad.validation.models.enums.CalificacionCrediticia;
 import IEComerce.Konrad.validation.models.enums.EstadoJudicial;
 import IEComerce.Konrad.validation.models.enums.EstadoSolicitud;
-import jakarta.persistence.*;
 import lombok.*;
 
-
-@Entity
-@Table(name = "solicitudes")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,22 +12,13 @@ import lombok.*;
 @Builder
 public class SolicitudVendedor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String numeroIdentificacion;
-
     private String nombres;
-
     private String apellidos;
-
     private String correoElectronico;
-
-    @Enumerated(EnumType.STRING)
     private EstadoSolicitud estado;
-
-    private String motivoResultado; // Justificación para el correo
+    private String motivoResultado; // Justificación para el resultado
 
     public void evaluar(CalificacionCrediticia datacredito, CalificacionCrediticia cifin, EstadoJudicial judicial) {
         if (datacredito == CalificacionCrediticia.BAJA || cifin == CalificacionCrediticia.BAJA || judicial == EstadoJudicial.REQUERIDO) {
